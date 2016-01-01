@@ -371,12 +371,12 @@ TWDP.SME.param.numberWindowMeta = (String(TWDP.parameters['Number Window Meta'])
     if (this._twdNameWindow.twdWindowskin) {
       if (this._twdNameWindow.twdWindowskin.name != skinToBe) {
         this._twdNameWindow.twdWindowskin = TwdWindowskin.load(skinToBe);
-        this._twdNameWindow.twdWindowskin.addLoadListener(this._refreshTwdNameWindow.bind(this,name));
+        this._twdNameWindow.twdWindowskin.addLoadListener(this._refreshTwdNameWindow.bind(this, name));
       }
     } else {
       if (skinToBe.length > 1) {
         this._twdNameWindow.twdWindowskin = TwdWindowskin.load(skinToBe);
-        this._twdNameWindow.twdWindowskin.addLoadListener(this._refreshTwdNameWindow.bind(this,name));
+        this._twdNameWindow.twdWindowskin.addLoadListener(this._refreshTwdNameWindow.bind(this, name));
       }
     }
 
@@ -876,8 +876,8 @@ TWDP.SME.param.numberWindowMeta = (String(TWDP.parameters['Number Window Meta'])
     result.fuki.height = 0;
     result.fuki.lines = 1;
     result.fuki.position = 7;
-    result.busts = [];
-    result.portraits = [];
+    result.busts = {};
+    result.portraits = {};
     result.nameWindow = {};
     result.nameWindow.enabled = false;
     result.nameWindow.text = '';
@@ -1151,12 +1151,18 @@ TWDP.SME.param.numberWindowMeta = (String(TWDP.parameters['Number Window Meta'])
   Window_Message.prototype.loadPictures = function(result) {
     for (pic in result.portraits) {
       var p = result.portraits[pic];
-      p.bitmap = this.bitmap = ImageManager.loadBitmap('img/portraits/', p.filename, 0, true);
+      if (p.filename === undefined || p.filename === null) {
+        continue;
+      }
+      p.bitmap = ImageManager.loadBitmap('img/portraits/', p.filename.toLowerCase(), 0, true);
     }
 
     for (pic in result.busts) {
       var p = result.busts[pic];
-      p.bitmap = this.bitmap = ImageManager.loadBitmap('img/busts/', p.filename, 0, true);
+      if (p.filename === undefined || p.filename === null) {
+        continue;
+      }
+      p.bitmap = ImageManager.loadBitmap('img/busts/', p.filename.toLowerCase(), 0, true);
     }
   }
 
